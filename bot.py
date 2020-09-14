@@ -24,7 +24,7 @@ def connect(channel):
             s.send("POND :tmi.twitch.tv\r\n".encode("utf-8"))
         elif response.__contains__("@supermegacoolbot.tmi.twitch.tv"):
             print(f"Connected to channel {channel} successfully")
-        elif not response.__contains__("Welcome, GLHF"):
+        elif not response.__contains__("tmi :tmi.twitch.tv 001 supermegacoolbot :Welcome, GLHF!"):
             username = re.search(r"\w+", response).group(0)
             message = chat_message.sub("", response)
             print(channel, username, message)
