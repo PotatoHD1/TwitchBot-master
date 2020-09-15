@@ -16,20 +16,20 @@ def connect(channel):
     s.send("JOIN #{}\r\n".format(channel).encode("utf-8"))
     chat_message = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
     _thread.start_new_thread(utils.fillOpList, ())
-    text = f"WASAAAAAAAAAP"
+    text = f"Bot connected"
     utils.sendmsg(s, channel, text)
     while True:
         response = s.recv(1024).decode("utf-8")
         if response == "PING :tmi.twitch.tv\r\n":
             s.send("POND :tmi.twitch.tv\r\n".encode("utf-8"))
-        elif response.__contains__("@supermegacoolbot.tmi.twitch.tv"):
-            print(f"Connected to channel {channel} successfully")
-        elif not response.__contains__("tmi :tmi.twitch.tv 001 supermegacoolbot :Welcome, GLHF!"):
+        else:
             username = re.search(r"\w+", response).group(0)
             message = chat_message.sub("", response)
-            print(channel, username, message)
+            if response.__contains__(f"@{config.NICK}.tmi.twitch.tv") and username == config.NICK:
+                print(f"Connected to channel {channel} successfully")
+            elif not response.__contains__(f":tmi.twitch.tv 001 {config.NICK} :Welcome, GLHF!") and username == "twi":
+                print(channel, username, message)
         sleep(1)
-    print(channel)
 
 
 # if message.strip() == "!time":
