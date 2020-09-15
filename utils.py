@@ -40,7 +40,3 @@ def fillOpList(channel):
     finally:
         "Something went wrong...do nothing"
     return oplist
-
-
-def isOp(user):
-    return user in config.oplist
