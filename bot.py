@@ -17,7 +17,6 @@ def connect(channel):
     chat_message = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
     text = f"Bot connected"
     utils.sendmsg(s, channel, text)
-    oplist = {}
     while True:
         response = s.recv(1024).decode("utf-8")
         if response == "PING :tmi.twitch.tv\r\n":
