@@ -10,36 +10,36 @@ def sendmsg(sock, channel, message):
     sock.send("PRIVMSG #{} :{}\r\n".format(channel, message).encode("utf-8"))
 
 
-def ban(sock, user):
-    mess(sock, ".ban {}".format(user))
+def ban(sock, channel, user):
+    sendmsg(sock, channel, ".ban {}".format(user))
 
 
-def timeout(sock, user, seconds=500):
-    mess(sock, ".timeout {}".format(user, seconds))
+def timeout(sock, channel, user, seconds=500):
+    sendmsg(sock, channel, ".timeout {}".format(user, seconds))
 
 
 # req = request
 # res = response
-def fillOpList():
-    while True:
-        try:
-            url = "http://tmi.twitch.tv/group/user/winderton/chatters"
-            req = urllib3.Request(url, headers={"accept": "*/*"})
-            res = urllib3.urlopen(req).read()
-            if res.find("502 bad gateway") == - 1:
-                config.oplist.clear()
-                data = json.loads(res)
-                for p in data["chatters"]["moderators"]:
-                    config.oplist[p] = "mod"
-                for p in data["chatters"]["global_mods"]:
-                    config.oplist[p] = "global_mod"
-                for p in data["chatters"]["admins"]:
-                    config.oplist[p] = "admin"
-                for p in data["chatters"]["staff"]:
-                    config.oplist[p] = "staff"
-        except:
-            "Something went wrong...do nothing"
-        sleep(5)
+def fillOpList(channel):
+    oplist = {}
+    try:
+        http = urllib3.PoolManager()
+        url = f"http://tmi.twitch.tv/group/user/{channel}/chatters"
+        req = http.request('GET', url, headers={"accept": "*/*"})
+        res = req.data.decode('utf-8')
+        if res.find("502 bad gateway") == - 1:
+            data = json.loads(res)
+            for p in data["chatters"]["moderators"]:
+                oplist[p] = "mod"
+            for p in data["chatters"]["global_mods"]:
+                oplist[p] = "global_mod"
+            for p in data["chatters"]["admins"]:
+                oplist[p] = "admin"
+            for p in data["chatters"]["staff"]:
+                oplist[p] = "staff"
+    finally:
+        "Something went wrong...do nothing"
+    return oplist
 
 
 def isOp(user):
