@@ -27,7 +27,7 @@ def connect(channel):
             message = chat_message.sub("", response)
             if response.__contains__(f"@{config.NICK}.tmi.twitch.tv") and username == config.NICK:
                 print(f"Connected to channel {channel} successfully")
-            elif not response.__contains__(f":tmi.twitch.tv 001 {config.NICK} :Welcome, GLHF!") and username == "twi":
+            elif not response.__contains__(f":tmi.twitch.tv 001 {config.NICK} :Welcome, GLHF!") and username != "twi":
                 print(channel, username, message)
         sleep(1)
 
