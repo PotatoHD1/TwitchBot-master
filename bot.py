@@ -23,13 +23,11 @@ def connect(channel):
         if response == "PING :tmi.twitch.tv\r\n":
             s.send("POND :tmi.twitch.tv\r\n".encode("utf-8"))
         else:
-            oplist = utils.fillOpList(channel)
             username = re.search(r"\w+", response).group(0)
             message = chat_message.sub("", response)
             if message.strip() == "!time":
                 utils.sendmsg(s, channel, "it's currently: " + time.strftime("%I:%M %p %Z on %A %B %d %Y"))
-                print(oplist)
-            # elif username not in oplist:
+            # elif username not in utils.fillOpList(channel):
             #     utils.ban(s, channel, username)
             if response.__contains__(f"@{config.NICK}.tmi.twitch.tv") and username == config.NICK:
                 print(f"Connected to channel {channel} successfully")
