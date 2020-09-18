@@ -18,7 +18,7 @@ def logic(m, channel):
         if message.strip() == "!time":
             utils.sendmsg(s, channel, "it's currently: " + asctime(localtime()))
         elif username not in utils.fillOpList(channel) and message.strip().__contains__("!ban"):
-            utils.timeout(s, channel, username, 30 if message.strip() == "!ban" else message.strip().split("!ban")[1])
+            utils.timeout(s, channel, username, 30 if message.strip() == "!ban" else int(message.strip().split("!ban")[1]))
         print(f"{channel}@{username}: {message}")
 
 
