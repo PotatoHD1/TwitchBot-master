@@ -14,7 +14,7 @@ def ban(sock, channel, user):
     sendmsg(sock, channel, ".ban {}".format(user))
 
 
-def timeout(sock, channel, user, seconds=500):
+def timeout(sock, channel, user, seconds=30):
     sendmsg(sock, channel, ".timeout {}".format(user, seconds))
 
 
@@ -38,5 +38,5 @@ def fillOpList(channel):
             for p in data["chatters"]["staff"]:
                 oplist[p] = "staff"
     finally:
-        print("Error in fillOpList")
+        "Nothing happened"
     return oplist
