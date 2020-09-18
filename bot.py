@@ -36,7 +36,7 @@ def connect(channel):
             s.send("POND :tmi.twitch.tv\r\n".encode("utf-8"))
         else:
             messages = response.split("\r\n")
-            [logic(m, channel) for m in messages if m != ""]
+            (logic(m, channel) for m in messages if m != "")
 
 
 # if message.strip() == "!messages" and utils.isOp(username):
