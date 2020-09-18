@@ -38,5 +38,5 @@ def fillOpList(channel):
             for p in data["chatters"]["staff"]:
                 oplist[p] = "staff"
     finally:
-        "Something went wrong...do nothing"
+        print("Error in fillOpList")
     return oplist
