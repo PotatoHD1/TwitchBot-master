@@ -7,7 +7,7 @@ import _thread
 import threading
 
 
-def logic(m, channel):
+def logic(s, m, channel):
     chat_message = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
     username = re.search(r"\w+", m).group(0)
     message = chat_message.sub("", m)
@@ -18,7 +18,8 @@ def logic(m, channel):
         if message.strip() == "!time":
             utils.sendmsg(s, channel, "it's currently: " + asctime(localtime()))
         elif username not in utils.fillOpList(channel) and message.strip().__contains__("!ban"):
-            utils.timeout(s, channel, username, 30 if message.strip() == "!ban" else int(message.strip().split("!ban")[1]))
+            utils.timeout(s, channel, username,
+                          30 if message.strip() == "!ban" else int(message.strip().split("!ban")[1]))
         print(f"{channel}@{username}: {message}")
 
 
@@ -36,7 +37,7 @@ def connect(channel):
             s.send("POND :tmi.twitch.tv\r\n".encode("utf-8"))
         else:
             messages = response.split("\r\n")
-            [logic(m, channel) for m in messages if m != ""]
+            [logic(s, m, channel) for m in messages if m != ""]
 
 
 # if message.strip() == "!messages" and utils.isOp(username):
