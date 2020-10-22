@@ -19,12 +19,11 @@ def logic(s, m, channel, badWords):
         print(f"{channel}@{username}: {message}")
         message = message.strip()
         for word in message.split():
-            if word in badWords and username not in utils.fillOpList(channel):
-                utils.timeout(s, channel, username)
-                print(f"Timedout user {username} on channel {channel} for 30 seconds")
+            if word in badWords:
+                utils.timeout(s, channel, username, 55)
         if message == "!time":
             utils.sendmsg(s, channel, "it's currently: " + asctime(localtime()))
-        elif username not in utils.fillOpList(channel) and message.strip().__contains__("!ban"):
+        elif message.strip().__contains__("!ban"):
             utils.timeout(s, channel, username,
                           30 if message.strip() == "!ban" else int(message.strip().split("!ban")[1]))
 
@@ -51,6 +50,7 @@ def connect(channel, badWords):
 #     utils.mess(s, "Go and click the subscribe button there!")
 if __name__ == "__main__":
     lineList = [line.rstrip('\r\n') for line in codecs.open(config.WORDSPATH, 'r', 'utf-8')]
+    lineList = set(lineList)
     threads = [threading.Thread(target=connect, args=["mazzy_max", lineList]),
                threading.Thread(target=connect, args=["potatohd404", lineList])]
     for j in threads:

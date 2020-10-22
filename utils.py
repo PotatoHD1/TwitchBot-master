@@ -11,11 +11,15 @@ def sendmsg(sock, channel, message):
 
 
 def ban(sock, channel, user):
-    sendmsg(sock, channel, f"/ban {user}")
+    if not (user in fillOpList(channel) or user == channel):
+        sendmsg(sock, channel, f"/ban {user}")
+        print(f"Ban user {user} on channel {channel} for OVER 9000 seconds")
 
 
 def timeout(sock, channel, user, seconds=30):
-    sendmsg(sock, channel, f"/timeout {user} {seconds}")
+    if not (user in fillOpList(channel) or user == channel):
+        sendmsg(sock, channel, f"/timeout {user} {seconds}")
+        print(f"Timeout user {user} on channel {channel} for {seconds} seconds")
 
 
 # req = request
