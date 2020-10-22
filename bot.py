@@ -5,9 +5,10 @@ import re
 from time import *
 import _thread
 import threading
+import codecs
 
 
-def logic(s, m, channel):
+def logic(s, m, channel, badWords):
     chat_message = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
     username = re.search(r"\w+", m).group(0)
     message = chat_message.sub("", m)
@@ -15,15 +16,20 @@ def logic(s, m, channel):
         print(f"Connected to channel {channel} successfully")
     elif not m.__contains__(f":tmi.twitch.tv 001 {config.NICK} :Welcome, GLHF!") and username != "twi" \
             and username != config.NICK and username != "tmi":
-        if message.strip() == "!time":
+        print(f"{channel}@{username}: {message}")
+        message = message.strip()
+        for word in message.split():
+            if word in badWords and username not in utils.fillOpList(channel):
+                utils.timeout(s, channel, username)
+                print(f"Timedout user {username} on channel {channel} for 30 seconds")
+        if message == "!time":
             utils.sendmsg(s, channel, "it's currently: " + asctime(localtime()))
         elif username not in utils.fillOpList(channel) and message.strip().__contains__("!ban"):
             utils.timeout(s, channel, username,
                           30 if message.strip() == "!ban" else int(message.strip().split("!ban")[1]))
-        print(f"{channel}@{username}: {message}")
 
 
-def connect(channel):
+def connect(channel, badWords):
     s = socket.socket()
     s.connect((config.HOST, config.PORT))
     s.send("PASS {}\r\n".format(config.PASS).encode("utf-8"))
@@ -37,17 +43,18 @@ def connect(channel):
             s.send("POND :tmi.twitch.tv\r\n".encode("utf-8"))
         else:
             messages = response.split("\r\n")
-            [logic(s, m, channel) for m in messages if m != ""]
+            [logic(s, m, channel, badWords) for m in messages if m != ""]
 
 
 # if message.strip() == "!messages" and utils.isOp(username):
 #     utils.mess(s, "Do something awesome!")
 #     utils.mess(s, "Go and click the subscribe button there!")
-
-threads = [threading.Thread(target=connect, args=["mazzy_max"]),
-           threading.Thread(target=connect, args=["potatohd404"])]
-for j in threads:
-    j.start()
-# for j in threads:
-#     j.join()
-print("done")
+if __name__ == "__main__":
+    lineList = [line.rstrip('\r\n') for line in codecs.open(config.WORDSPATH, 'r', 'utf-8')]
+    threads = [threading.Thread(target=connect, args=["mazzy_max", lineList]),
+               threading.Thread(target=connect, args=["potatohd404", lineList])]
+    for j in threads:
+        j.start()
+    # for j in threads:
+    #     j.join()
+    print("done")

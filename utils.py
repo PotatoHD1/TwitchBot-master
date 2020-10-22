@@ -11,11 +11,11 @@ def sendmsg(sock, channel, message):
 
 
 def ban(sock, channel, user):
-    sendmsg(sock, channel, ".ban {}".format(user))
+    sendmsg(sock, channel, f"/ban {user}")
 
 
 def timeout(sock, channel, user, seconds=30):
-    sendmsg(sock, channel, ".timeout {}".format(user, seconds))
+    sendmsg(sock, channel, f"/timeout {user} {seconds}")
 
 
 # req = request
